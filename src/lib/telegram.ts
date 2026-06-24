@@ -34,6 +34,53 @@ export async function telegramAPI(method: string, body: Record<string, unknown>)
 }
 
 /**
+ * Resolves an image URL. If the URL points to a web page (like Pinterest or a shortener),
+ * it fetches the page and extracts the Open Graph image URL.
+ */
+export async function resolveImageUrl(url: string): Promise<string> {
+  const lowerUrl = url.toLowerCase();
+  // If it's a direct image link format, we can skip fetching
+  if (
+    lowerUrl.endsWith('.jpg') ||
+    lowerUrl.endsWith('.jpeg') ||
+    lowerUrl.endsWith('.png') ||
+    lowerUrl.endsWith('.gif') ||
+    lowerUrl.endsWith('.webp')
+  ) {
+    return url;
+  }
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      },
+    });
+
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.startsWith('image/')) {
+      return res.url;
+    }
+
+    const html = await res.text();
+    const metaTags = html.match(/<meta[^>]+>/gi) || [];
+    for (const tag of metaTags) {
+      const isOgImage = /property=["']og:image["']/i.test(tag) || /name=["']og:image["']/i.test(tag);
+      if (isOgImage) {
+        const contentMatch = tag.match(/content=["']([^"']+)["']/i);
+        if (contentMatch && contentMatch[1]) {
+          return contentMatch[1].replace(/&amp;/g, '&');
+        }
+      }
+    }
+  } catch (err) {
+    console.error('[resolveImageUrl] Failed to resolve image URL:', err);
+  }
+
+  return url;
+}
+
+/**
  * Post a product to the Telegram CHANNEL with an "Order Now" button
  */
 export async function postProductToChannel(product: {
@@ -54,9 +101,11 @@ export async function postProductToChannel(product: {
     .filter(Boolean)
     .join('\n');
 
+  const resolvedPhoto = await resolveImageUrl(product.imageUrl);
+
   const result = await telegramAPI('sendPhoto', {
     chat_id: CHANNEL_CHAT_ID,
-    photo: product.imageUrl,
+    photo: resolvedPhoto,
     caption,
     parse_mode: 'HTML',
     reply_markup: {
