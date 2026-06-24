@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma';
 import ProductCatalog from '@/components/customer/ProductCatalog';
 import Link from 'next/link';
 
-export const revalidate = 10; // Revalidate every 10 seconds (ISR)
+export const dynamic = 'force-dynamic'; // Don't pre-render at build time
 
 export default async function Home() {
   const products = await prisma.product.findMany({
