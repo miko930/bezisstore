@@ -6,7 +6,7 @@
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
 const CHANNEL_CHAT_ID = process.env.TELEGRAM_CHANNEL_CHAT_ID!;
 const ADMIN_CHAT_ID = process.env.TELEGRAM_ADMIN_CHAT_ID!;
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL!;
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'https://bezisstore.vercel.app');
 
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
@@ -43,13 +43,14 @@ export async function postProductToChannel(product: {
   price: number;
   imageUrl: string;
 }) {
+  const priceStr = escapeMarkdown(product.price.toLocaleString());
   const caption = [
     `🛍️ *${escapeMarkdown(product.name)}*`,
     ``,
     product.description ? `📝 ${escapeMarkdown(product.description)}` : null,
-    `💰 Price: *${product.price.toLocaleString()} ETB*`,
+    `💰 Price: *${priceStr} ETB*`,
     ``,
-    `👇 Tap below to order now!`,
+    `👇 Tap below to order now\\!`,
   ]
     .filter(Boolean)
     .join('\n');
@@ -58,7 +59,7 @@ export async function postProductToChannel(product: {
     chat_id: CHANNEL_CHAT_ID,
     photo: product.imageUrl,
     caption,
-    parse_mode: 'Markdown',
+    parse_mode: 'MarkdownV2',
     reply_markup: {
       inline_keyboard: [
         [
