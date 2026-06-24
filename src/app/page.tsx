@@ -37,12 +37,11 @@ export default async function Home() {
       <header className="sticky top-0 z-50 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-900 transition-all">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-150 dark:shadow-none transition-transform group-hover:scale-105">
-              <ShoppingBag className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-extrabold text-xl bg-gradient-to-r from-zinc-900 to-zinc-700 dark:from-white dark:to-zinc-300 bg-clip-text text-transparent tracking-tight">
-              Bezi's Store
-            </span>
+            <img 
+              src="/logo.png" 
+              alt="Bezi's Store Logo" 
+              className="h-10 w-auto object-contain dark:invert transition-transform group-hover:scale-102"
+            />
           </Link>
 
           <nav className="flex items-center gap-4">

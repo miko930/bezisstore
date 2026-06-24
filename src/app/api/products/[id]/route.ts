@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { resolveImageUrl } from '@/lib/telegram';
 
 export async function GET(
   _req: NextRequest,
@@ -17,6 +18,11 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const body = await req.json();
+
+  if (body.imageUrl) {
+    body.imageUrl = await resolveImageUrl(body.imageUrl);
+  }
+
   const product = await prisma.product.update({
     where: { id },
     data: body,

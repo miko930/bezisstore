@@ -15,15 +15,13 @@ export default function AdminSidebar() {
   return (
     <aside className="w-60 bg-white shadow-sm min-h-screen p-5 flex flex-col border-r border-gray-100">
       <div className="mb-8 px-2">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-lg">🛒</span>
-          </div>
-          <div>
-            <h1 className="text-base font-bold text-gray-900">Shop Admin</h1>
-            <p className="text-xs text-gray-400">Management</p>
-          </div>
-        </div>
+        <Link href="/" className="flex items-center gap-3">
+          <img 
+            src="/logo.png" 
+            alt="Bezi's Store Logo" 
+            className="h-10 w-auto object-contain"
+          />
+        </Link>
       </div>
 
       <nav className="space-y-1 flex-1">
