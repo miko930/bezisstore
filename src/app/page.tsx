@@ -35,12 +35,12 @@ export default async function Home() {
 
       {/* Navigation Header */}
       <header className="sticky top-0 z-50 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-md border-b border-zinc-100 dark:border-zinc-900 transition-all">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
             <img 
               src="/logo.png" 
               alt="Bezi's Store Logo" 
-              className="h-10 w-auto object-contain dark:invert transition-transform group-hover:scale-102"
+              className="h-14 w-auto object-contain dark:invert transition-transform group-hover:scale-102"
             />
           </Link>
 
@@ -65,31 +65,41 @@ export default async function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-8">
+      <section className="relative overflow-hidden py-24 lg:py-32 px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center justify-center space-y-8">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 -z-10">
+          <img 
+            src="https://i.pinimg.com/736x/93/17/7e/93177ee7faa08eedfeac091de8f57dfc.jpg" 
+            alt="Bezi's Store Banner" 
+            className="w-full h-full object-cover object-center scale-105 filter brightness-[0.4] dark:brightness-[0.25] blur-[1px]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-50 via-zinc-50/20 to-transparent dark:from-zinc-950 dark:via-zinc-950/20" />
+        </div>
+
         {/* Glow Badge */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100/50 dark:border-indigo-900/30 shadow-sm">
-          <Zap className="w-3.5 h-3.5 fill-indigo-600 dark:fill-indigo-400 text-indigo-650" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 text-indigo-200 border border-white/15 backdrop-blur-md shadow-sm">
+          <Zap className="w-3.5 h-3.5 fill-indigo-400 text-indigo-300" />
           <span>በቴሌግራም የሚሰራ ፈጣን ግብይት</span>
         </div>
 
         {/* Hero Title */}
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-zinc-900 dark:text-white">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-white max-w-4xl">
           ፈጣን እና አስተማማኝ ግብይት{' '}
-          <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-pink-600 bg-clip-text text-transparent dark:from-indigo-400 dark:via-violet-400 dark:to-pink-400">
+          <span className="bg-gradient-to-r from-indigo-300 via-violet-300 to-pink-300 bg-clip-text text-transparent">
             በአዲስ አበባ
           </span>
         </h1>
 
         {/* Hero Subtitle */}
-        <p className="max-w-2xl mx-auto text-base sm:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed font-medium">
+        <p className="max-w-2xl mx-auto text-base sm:text-lg text-zinc-200 leading-relaxed font-medium">
           ከፍተኛ ጥራት ያላቸውን ምርቶች ይመልከቱ። በአንድ ጠቅታ ያዝዙ፣ ዝርዝሮችዎን ያረጋግጡ፣ ከዚያም ወደ በርዎ ይደርሳል።
         </p>
 
         {/* Hero Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 max-w-md mx-auto sm:max-w-none">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full max-w-md sm:max-w-none">
           <a
             href="#catalog"
-            className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-indigo-200 dark:shadow-none hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-white hover:bg-zinc-100 text-zinc-950 font-bold px-8 py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>ምርቶችን ይመልከቱ</span>
             <ArrowDown className="w-4 h-4 animate-bounce" />
@@ -98,9 +108,9 @@ export default async function Home() {
             href={channelLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-200 font-bold px-8 py-4 rounded-2xl shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-white/10 border border-white/20 text-white hover:bg-white/20 font-bold px-8 py-4 rounded-2xl shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
           >
-            <Send className="w-4 h-4 text-sky-500 fill-sky-500/10" />
+            <Send className="w-4 h-4 text-sky-400 fill-sky-400/10" />
             <span>ቻናላችንን ይቀላቀሉ</span>
           </Link>
         </div>
