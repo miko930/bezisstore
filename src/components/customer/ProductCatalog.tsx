@@ -34,7 +34,7 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
         <div className="relative w-full md:max-w-xs">
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="ምርቶችን ይፈልጉ..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl px-4 py-2.5 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
@@ -52,7 +52,7 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
                 : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-300'
             }`}
           >
-            All Products
+            ሁሉም ምርቶች
           </button>
           <button
             onClick={() => setFilter('instock')}
@@ -62,7 +62,7 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
                 : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-300'
             }`}
           >
-            In Stock
+            አሉ
           </button>
         </div>
       </div>
@@ -91,7 +91,7 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
                         : 'bg-rose-500/90 text-white'
                     }`}
                   >
-                    {product.inStock ? 'In Stock' : 'Out of Stock'}
+                    {product.inStock ? 'አለ' : 'አልቀረ'}
                   </span>
                 </div>
               </div>
@@ -103,16 +103,15 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
                 </h3>
                 
                 <p className="text-gray-500 dark:text-zinc-400 text-sm mt-1.5 line-clamp-2 flex-grow">
-                  {product.description || 'No description available.'}
+                  {product.description || 'መግለጫ የለም።'}
                 </p>
 
                 <div className="mt-4 pt-4 border-t border-gray-50 dark:border-zinc-800 flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-xs text-gray-400 dark:text-zinc-500 uppercase font-semibold tracking-wider">
-                      Price
-                    </span>
+                      ዋጋ                    </span>
                     <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400">
-                      {product.price.toLocaleString()} <span className="text-xs font-bold">ETB</span>
+                      {product.price.toLocaleString()} <span className="text-xs font-bold">ብር</span>
                     </span>
                   </div>
 
@@ -121,14 +120,14 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
                       href={`/order/${product.id}`}
                       className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm shadow-md shadow-blue-100 dark:shadow-none hover:scale-[1.03] active:scale-[0.98] transition-all"
                     >
-                      🛒 Order Now
+                      🛒 አሁን እዘዝ
                     </Link>
                   ) : (
                     <button
                       disabled
                       className="bg-gray-150 text-gray-400 font-semibold px-4 py-2.5 rounded-xl text-sm border border-gray-200 cursor-not-allowed"
                     >
-                      Sold Out
+                      አልቀረ
                     </button>
                   )}
                 </div>
@@ -140,10 +139,10 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
         <div className="text-center py-20 bg-gray-50 dark:bg-zinc-900/50 rounded-2xl border border-dashed border-gray-200 dark:border-zinc-800">
           <div className="text-5xl mb-4">🛍️</div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            No products found
+            ምርት አልተገኘም
           </h3>
           <p className="text-gray-500 dark:text-zinc-400 text-sm mt-1">
-            Try adjusting your search terms or filters.
+            የፈለጉትን ቁልፍ ቀይረው ዳግም ይሞክሩ።
           </p>
         </div>
       )}

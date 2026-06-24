@@ -28,7 +28,7 @@ export default async function OrderPage({
               className="w-full h-56 object-cover"
             />
             <div className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
-              In Stock
+              አለ
             </div>
           </div>
           <div className="p-5">
@@ -37,7 +37,7 @@ export default async function OrderPage({
               <p className="text-gray-500 text-sm mt-1">{product.description}</p>
             )}
             <p className="text-2xl font-bold text-green-600 mt-3">
-              {product.price.toLocaleString()} ETB
+              {product.price.toLocaleString()} ብር
             </p>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default async function OrderPage({
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <span className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm">📋</span>
-            Your Details
+            የእርስዎ መረጃ
           </h2>
           <OrderForm product={{ id: product.id, name: product.name, price: product.price }} />
         </div>

@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Telegram Shop — Order with Ease",
-  description: "Shop directly from Telegram. Browse products, place orders, and get them delivered to your door in Addis Ababa.",
+  title: "Bezi's Store — በቀላሉ ይዘዙ",
+  description: "ከቴሌግራም በቀጥታ ይግዙ። ምርቶችን ይመልከቱ፣ ትዕዛዝ ያስገቡ፣ በአዲስ አበባ ወደ በርዎ ይደርሳል።",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="am"
       className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">{children}</body>
