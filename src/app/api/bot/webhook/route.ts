@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
       // Only authorize admin to perform action
       if (fromId !== ADMIN_CHAT_ID) {
-        await answerCallbackQuery(callbackQuery.id, '⚠️ Unauthorized: You are not the admin!');
+        await answerCallbackQuery(callbackQuery.id, '⚠️ ፈቃድ የለዎትም: እርስዎ አድሚን አይደሉም!');
         return NextResponse.json({ ok: true });
       }
 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
         });
 
         if (!order) {
-          await answerCallbackQuery(callbackQuery.id, '❌ Order not found in database!');
+          await answerCallbackQuery(callbackQuery.id, '❌ ትዕዛዙ በዳታቤዝ ውስጥ አልተገኘም!');
           return NextResponse.json({ ok: true });
         }
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         });
 
         // Answer callback query so Telegram loader stops
-        await answerCallbackQuery(callbackQuery.id, `Order ${action === 'CONFIRMED' ? 'Confirmed' : 'Cancelled'}!`);
+        await answerCallbackQuery(callbackQuery.id, `ትዕዛዝ ${action === 'CONFIRMED' ? 'ተረጋግጧል' : 'ተሰርዟል'}!`);
 
         // Edit the Telegram message to reflect the new status and remove the buttons
         const emoji = action === 'CONFIRMED' ? '✅' : '❌';
@@ -56,7 +56,8 @@ export async function POST(req: NextRequest) {
         
         // Reconstruct the message with the status update
         const originalText = message.text || '';
-        const updatedText = `${originalText}\n\n${emoji} *Order Status:* ${action}\n📅 *Updated At:* ${escapeMarkdown(dateStr)}`;
+        const amharicAction = action === 'CONFIRMED' ? 'የተረጋገጠ' : 'የተሰረዘ';
+        const updatedText = `${originalText}\n\n${emoji} *የትዕዛዝ ሁኔታ:* ${amharicAction}\n📅 *የተሻሻለበት ቀን:* ${escapeMarkdown(dateStr)}`;
 
         await editMessageText(message.chat.id, message.message_id, updatedText, {
           parse_mode: 'Markdown',
@@ -79,12 +80,12 @@ export async function POST(req: NextRequest) {
           await telegramAPI('sendMessage', {
             chat_id: chat.id,
             text: [
-              `👋 *Welcome to the Shop Admin Bot\\!*`,
+              `👋 *እንኳን ወደ ሱቅ አስተዳዳሪ ቦት በደህና መጡ\!*`,
               ``,
-              `You can manage and view shop data directly from Telegram using these commands:`,
-              `📊 /stats \\- View overall shop statistics`,
-              `📦 /orders \\- View recent pending/confirmed orders`,
-              `🛍️ /products \\- View in\\-stock products`,
+              `በእነዚህ ትዕዛዞች በመጠቀም የሱቅዎን መረጃዎች በቀጥታ ከቴሌግራም ማስተዳደር እና ማየት ይችላሉ:`,
+              `📊 /stats \\- አጠቃላይ የሱቅ ስታቲስቲክስን ይመልከቱ`,
+              `📦 /orders \\- የቅርብ ጊዜ ትዕዛዞችን ይመልከቱ`,
+              `🛍️ /products \\- በክምችት ላይ ያሉ ምርቶችን ይመልከቱ`,
             ].join('\n'),
             parse_mode: 'MarkdownV2',
           });
@@ -104,12 +105,12 @@ export async function POST(req: NextRequest) {
           await telegramAPI('sendMessage', {
             chat_id: chat.id,
             text: [
-              `📊 *Shop Statistics*`,
+              `📊 *የሱቅ ስታቲስቲክስ*`,
               `──────────────────`,
-              `🛍️ *Total Products:* ${totalProducts}`,
-              `📦 *Total Orders:* ${totalOrders}`,
-              `⏳ *Pending Orders:* ${pendingOrders}`,
-              `💰 *Total Revenue:* ${revenue.toLocaleString()} ETB`,
+              `🛍️ *ጠቅላላ ምርቶች:* ${totalProducts}`,
+              `📦 *ጠቅላላ ትዕዛዞች:* ${totalOrders}`,
+              `⏳ *በመጠባበቅ ላይ ያሉ ትዕዛዞች:* ${pendingOrders}`,
+              `💰 *ጠቅላላ ገቢ:* ${revenue.toLocaleString()} ብር`,
             ].join('\n'),
             parse_mode: 'Markdown',
           });
@@ -123,19 +124,28 @@ export async function POST(req: NextRequest) {
           if (recentOrders.length === 0) {
             await telegramAPI('sendMessage', {
               chat_id: chat.id,
-              text: '📭 No orders found in the database.',
+              text: '📭 በዳታቤዝ ውስጥ ምንም ትዕዛዝ አልተገኘም።',
             });
             return NextResponse.json({ ok: true });
           }
 
+          const amharicStatus: Record<string, string> = {
+            PENDING: 'በመጠባበቅ ላይ',
+            CONFIRMED: 'የተረጋገጠ',
+            PROCESSING: 'በማዘጋጀት ላይ',
+            DELIVERED: 'የደረሰ',
+            CANCELLED: 'የተሰረዘ',
+          };
+
           const orderLines = recentOrders.map((o) => {
             const statusEmoji = o.status === 'PENDING' ? '⏳' : o.status === 'CONFIRMED' ? '✅' : o.status === 'DELIVERED' ? '🎉' : '❌';
-            return `${statusEmoji} *Order:* ${escapeMarkdown(o.product.name)} (x${o.quantity})\n👤 *Customer:* ${escapeMarkdown(o.customerName)}\n💰 *Total:* ${o.totalPrice.toLocaleString()} ETB\n📍 *Address:* ${escapeMarkdown(o.customerAddress)}\n⏱️ *Status:* ${o.status}\n`;
+            const statusText = amharicStatus[o.status] || o.status;
+            return `${statusEmoji} *ምርት:* ${escapeMarkdown(o.product.name)} (x${o.quantity})\n👤 *ደንበኛ:* ${escapeMarkdown(o.customerName)}\n💰 *ጠቅላላ:* ${o.totalPrice.toLocaleString()} ብር\n📍 *አድራሻ:* ${escapeMarkdown(o.customerAddress)}\n⏱️ *ሁኔታ:* ${statusText}\n`;
           });
 
           await telegramAPI('sendMessage', {
             chat_id: chat.id,
-            text: `📦 *Recent Orders*\n──────────────────\n\n${orderLines.join('\n──────────────────\n\n')}`,
+            text: `📦 *የቅርብ ጊዜ ትዕዛዞች*\n──────────────────\n\n${orderLines.join('\n──────────────────\n\n')}`,
             parse_mode: 'Markdown',
           });
         } else if (text === '/products') {
@@ -147,18 +157,18 @@ export async function POST(req: NextRequest) {
           if (products.length === 0) {
             await telegramAPI('sendMessage', {
               chat_id: chat.id,
-              text: '📭 No products found. Add products from the dashboard!',
+              text: '📭 ምንም ምርቶች አልተገኙም። እባክዎን ከዳሽቦርዱ ላይ ምርት ይጨምሩ!',
             });
             return NextResponse.json({ ok: true });
           }
 
           const productLines = products.map((p) => {
-            return `🛍️ *${escapeMarkdown(p.name)}*\n💰 Price: ${p.price.toLocaleString()} ETB\n📦 Stock: ${p.inStock ? 'In Stock' : 'Out of Stock'}`;
+            return `🛍️ *${escapeMarkdown(p.name)}*\n💰 ዋጋ: ${p.price.toLocaleString()} ብር\n📦 ክምችት: ${p.inStock ? 'ክምችት አለ' : 'ክምችት አልቋል'}`;
           });
 
           await telegramAPI('sendMessage', {
             chat_id: chat.id,
-            text: `🛍️ *Recent Products*\n──────────────────\n\n${productLines.join('\n\n')}`,
+            text: `🛍️ *የቅርብ ጊዜ ምርቶች*\n──────────────────\n\n${productLines.join('\n\n')}`,
             parse_mode: 'Markdown',
           });
         }

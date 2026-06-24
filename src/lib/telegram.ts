@@ -94,9 +94,9 @@ export async function postProductToChannel(product: {
     `🛍️ <b>${escapeHtml(product.name)}</b>`,
     ``,
     product.description ? `📝 ${escapeHtml(product.description)}` : null,
-    `💰 Price: <b>${product.price.toLocaleString()} ETB</b>`,
+    `💰 ዋጋ: <b>${product.price.toLocaleString()} ብር</b>`,
     ``,
-    `👇 Tap below to order now!`,
+    `👇 ለማዘዝ ከታች ያለውን ይጫኑ!`,
   ]
     .filter(Boolean)
     .join('\n');
@@ -112,7 +112,7 @@ export async function postProductToChannel(product: {
       inline_keyboard: [
         [
           {
-            text: '🛒 Order Now',
+            text: '🛒 አሁን እዘዝ',
             url: `${APP_URL}/order/${product.id}`,
           },
         ],
@@ -137,20 +137,20 @@ export async function notifyAdminNewOrder(order: {
   note?: string | null;
 }) {
   const message = [
-    `🔔 <b>New Order Received!</b>`,
+    `🔔 <b>አዲስ ትዕዛዝ ደርሷል!</b>`,
     ``,
-    `📦 <b>Product:</b> ${escapeHtml(order.productName)}`,
-    `🔢 <b>Qty:</b> ${order.quantity}`,
-    `💰 <b>Total:</b> ${order.totalPrice.toLocaleString()} ETB`,
+    `📦 <b>ምርት:</b> ${escapeHtml(order.productName)}`,
+    `🔢 <b>ብዛት:</b> ${order.quantity}`,
+    `💰 <b>ጠቅላላ ዋጋ:</b> ${order.totalPrice.toLocaleString()} ብር`,
     ``,
-    `👤 <b>Customer:</b> ${escapeHtml(order.customerName)}`,
-    `📞 <b>Phone:</b> ${escapeHtml(order.customerPhone)}`,
-    `📍 <b>Address:</b> ${escapeHtml(order.customerAddress)}`,
-    order.note ? `📝 <b>Note:</b> ${escapeHtml(order.note)}` : null,
+    `👤 <b>ደንበኛ:</b> ${escapeHtml(order.customerName)}`,
+    `📞 <b>ስልክ ቁጥር:</b> ${escapeHtml(order.customerPhone)}`,
+    `📍 <b>አድራሻ:</b> ${escapeHtml(order.customerAddress)}`,
+    order.note ? `📝 <b>ማስታወሻ:</b> ${escapeHtml(order.note)}` : null,
     ``,
-    `🆔 Order ID: <code>${order.id}</code>`,
+    `🆔 የትዕዛዝ መለያ ቁጥር: <code>${order.id}</code>`,
     ``,
-    `👉 <a href="${APP_URL}/admin/orders/${order.id}">View in Dashboard</a>`,
+    `👉 <a href="${APP_URL}/admin/orders/${order.id}">በዳሽቦርድ ይመልከቱ</a>`,
   ]
     .filter(Boolean)
     .join('\n');
@@ -162,8 +162,8 @@ export async function notifyAdminNewOrder(order: {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: '✅ Confirm Order', callback_data: `confirm_${order.id}` },
-          { text: '❌ Cancel Order', callback_data: `cancel_${order.id}` },
+          { text: '✅ አረጋግጥ', callback_data: `confirm_${order.id}` },
+          { text: '❌ ሰርዝ', callback_data: `cancel_${order.id}` },
         ],
       ],
     },
@@ -185,9 +185,19 @@ export async function notifyAdminStatusUpdate(
     CANCELLED: '❌',
   };
 
+  const amharicStatus: Record<string, string> = {
+    PENDING: 'በመጠባበቅ ላይ',
+    CONFIRMED: 'የተረጋገጠ',
+    PROCESSING: 'በማዘጋጀት ላይ',
+    DELIVERED: 'የደረሰ',
+    CANCELLED: 'የተሰረዘ',
+  };
+
+  const statusText = amharicStatus[status] || status;
+
   await telegramAPI('sendMessage', {
     chat_id: ADMIN_CHAT_ID,
-    text: `${emoji[status] || '📋'} Order <b>${escapeHtml(orderId)}</b> for <b>${escapeHtml(customerName)}</b> updated to <b>${status}</b>`,
+    text: `${emoji[status] || '📋'} የደንበኛ <b>${escapeHtml(customerName)}</b> ትዕዛዝ <b>${escapeHtml(orderId)}</b> ወደ <b>${statusText}</b> ተቀይሯል።`,
     parse_mode: 'HTML',
   });
 }
