@@ -1,3 +1,4 @@
+import { ClipboardList } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import OrderForm from '@/components/customer/OrderForm';
@@ -45,7 +46,9 @@ export default async function OrderPage({
         {/* Order Form */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <span className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm">📋</span>
+            <span className="w-8 h-8 bg-indigo-50 text-indigo-650 rounded-xl flex items-center justify-center">
+              <ClipboardList className="w-4 h-4" />
+            </span>
             የእርስዎ መረጃ
           </h2>
           <OrderForm product={{ id: product.id, name: product.name, price: product.price }} />
