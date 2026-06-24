@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, ShoppingCart, ShoppingBag, AlertCircle } from 'lucide-react';
+import ProductImage from '@/components/customer/ProductImage';
 
 interface Product {
   id: string;
@@ -78,26 +79,7 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
             >
               {/* Product Image */}
               <div className="relative aspect-[4/3] overflow-hidden bg-emerald-50/50 dark:bg-zinc-850 flex items-center justify-center">
-                {product.imageUrl ? (
-                  <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      const parent = e.currentTarget.parentElement;
-                      if (parent) {
-                        const fallback = parent.querySelector('.image-fallback');
-                        if (fallback) fallback.classList.remove('hidden');
-                      }
-                    }}
-                  />
-                ) : null}
-                <div className={`image-fallback flex flex-col items-center justify-center p-6 text-zinc-400 dark:text-zinc-650 w-full h-full ${product.imageUrl ? 'hidden absolute inset-0' : ''}`}>
-                  <ShoppingBag className="w-10 h-10 mb-2 stroke-[1.5] text-emerald-600/60" />
-                  <span className="text-xs font-bold text-zinc-400">ምስል የለም</span>
-                </div>
+                <ProductImage src={product.imageUrl} name={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" />
                 <div className="absolute top-3 right-3">
                   <span
                     className={`text-xs font-bold px-3 py-1.5 rounded-full shadow-sm backdrop-blur-md ${
