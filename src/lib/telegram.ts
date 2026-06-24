@@ -43,14 +43,13 @@ export async function postProductToChannel(product: {
   price: number;
   imageUrl: string;
 }) {
-  const priceStr = escapeMarkdown(product.price.toLocaleString());
   const caption = [
-    `🛍️ *${escapeMarkdown(product.name)}*`,
+    `🛍️ <b>${escapeHtml(product.name)}</b>`,
     ``,
-    product.description ? `📝 ${escapeMarkdown(product.description)}` : null,
-    `💰 Price: *${priceStr} ETB*`,
+    product.description ? `📝 ${escapeHtml(product.description)}` : null,
+    `💰 Price: <b>${product.price.toLocaleString()} ETB</b>`,
     ``,
-    `👇 Tap below to order now\\!`,
+    `👇 Tap below to order now!`,
   ]
     .filter(Boolean)
     .join('\n');
@@ -59,7 +58,7 @@ export async function postProductToChannel(product: {
     chat_id: CHANNEL_CHAT_ID,
     photo: product.imageUrl,
     caption,
-    parse_mode: 'MarkdownV2',
+    parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [
         [
@@ -89,20 +88,20 @@ export async function notifyAdminNewOrder(order: {
   note?: string | null;
 }) {
   const message = [
-    `🔔 *New Order Received\\!*`,
+    `🔔 <b>New Order Received!</b>`,
     ``,
-    `📦 *Product:* ${escapeMarkdown(order.productName)}`,
-    `🔢 *Qty:* ${order.quantity}`,
-    `💰 *Total:* ${order.totalPrice.toLocaleString()} ETB`,
+    `📦 <b>Product:</b> ${escapeHtml(order.productName)}`,
+    `🔢 <b>Qty:</b> ${order.quantity}`,
+    `💰 <b>Total:</b> ${order.totalPrice.toLocaleString()} ETB`,
     ``,
-    `👤 *Customer:* ${escapeMarkdown(order.customerName)}`,
-    `📞 *Phone:* ${escapeMarkdown(order.customerPhone)}`,
-    `📍 *Address:* ${escapeMarkdown(order.customerAddress)}`,
-    order.note ? `📝 *Note:* ${escapeMarkdown(order.note)}` : null,
+    `👤 <b>Customer:</b> ${escapeHtml(order.customerName)}`,
+    `📞 <b>Phone:</b> ${escapeHtml(order.customerPhone)}`,
+    `📍 <b>Address:</b> ${escapeHtml(order.customerAddress)}`,
+    order.note ? `📝 <b>Note:</b> ${escapeHtml(order.note)}` : null,
     ``,
-    `🆔 Order ID: \`${order.id}\``,
+    `🆔 Order ID: <code>${order.id}</code>`,
     ``,
-    `👉 [View in Dashboard](${APP_URL}/admin/orders/${order.id})`,
+    `👉 <a href="${APP_URL}/admin/orders/${order.id}">View in Dashboard</a>`,
   ]
     .filter(Boolean)
     .join('\n');
@@ -110,7 +109,7 @@ export async function notifyAdminNewOrder(order: {
   await telegramAPI('sendMessage', {
     chat_id: ADMIN_CHAT_ID,
     text: message,
-    parse_mode: 'MarkdownV2',
+    parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [
         [
@@ -139,8 +138,8 @@ export async function notifyAdminStatusUpdate(
 
   await telegramAPI('sendMessage', {
     chat_id: ADMIN_CHAT_ID,
-    text: `${emoji[status] || '📋'} Order *${orderId}* for *${escapeMarkdown(customerName)}* updated to *${status}*`,
-    parse_mode: 'Markdown',
+    text: `${emoji[status] || '📋'} Order <b>${escapeHtml(orderId)}</b> for <b>${escapeHtml(customerName)}</b> updated to <b>${status}</b>`,
+    parse_mode: 'HTML',
   });
 }
 
@@ -178,3 +177,12 @@ export function escapeMarkdown(text: string): string {
   return text.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
 }
 
+/**
+ * Escape special characters for Telegram HTML parse mode
+ */
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
